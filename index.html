@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Splitter - Lunch Split Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-weight: 500;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .separator {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 25px 0;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #666;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .divider-small {
+            height: 1px;
+            background: #ddd;
+            margin: 12px 0;
+        }
+
+        .final-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .final-result-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .final-result-amount {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .slider-label-text {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .slider-value {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            padding: 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-moz-range-thumb:active {
+            transform: scale(1.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-reset:active {
+            background: #e0e0e0;
+            transform: scale(0.98);
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-copy:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-feedback {
+            display: none;
+            background: #4caf50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .final-result-amount {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Bill Splitter</h1>
+
+        <div class="input-group">
+            <label for="billAmount">Bill Amount ($)</label>
+            <input 
+                type="number" 
+                id="billAmount" 
+                placeholder="0.00" 
+                min="0" 
+                step="0.01"
+                inputmode="decimal"
+            >
+        </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label for="taxPercent">Tax (%)</label>
+                <input 
+                    type="number" 
+                    id="taxPercent" 
+                    placeholder="0" 
+                    min="0" 
+                    max="100"
+                    step="0.01"
+                    value="0"
+                    inputmode="decimal"
+                >
+            </div>
+            <div class="input-group">
+                <label for="tipPercent">Tip (%)</label>
+                <input 
+                    type="number" 
+                    id="tipPercent" 
+                    placeholder="0" 
+                    min="0" 
+                    max="100"
+                    step="0.01"
+                    value="0"
+                    inputmode="decimal"
+                >
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="numberOfPeople">Number of People</label>
+            <input 
+                type="number" 
+                id="numberOfPeople" 
+                placeholder="1" 
+                min="1" 
+                step="1"
+                value="2"
+                inputmode="numeric"
+            >
+        </div>
+
+        <div class="results-section">
+            <div class="result-row">
+                <span class="result-label">Subtotal:</span>
+                <span class="result-value">$<span id="subtotal">0.00</span></span>
+            </div>
+
+            <div class="result-row">
+                <span class="result-label">Tax:</span>
+                <span class="result-value">$<span id="tax">0.00</span></span>
+            </div>
+
+            <div class="result-row">
+                <span class="result-label">Tip:</span>
+                <span class="result-value">$<span id="tip">0.00</span></span>
+            </div>
+
+            <div class="divider-small"></div>
+
+            <div class="result-row">
+                <span class="result-label">Total:</span>
+                <span class="result-value">$<span id="total">0.00</span></span>
+            </div>
+
+            <div class="final-result">
+                <div class="final-result-label">Per Person</div>
+                <div class="final-result-amount">$<span id="perPerson">0.00</span></div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetCalculator()">Reset</button>
+            <button class="btn-copy" onclick="copyToClipboard()">Copy</button>
+        </div>
+
+        <div class="copy-feedback" id="copyFeedback">Copied to clipboard!</div>
+    </div>
+
+    <script>
+        const billAmountInput = document.getElementById('billAmount');
+        const taxPercentInput = document.getElementById('taxPercent');
+        const tipPercentInput = document.getElementById('tipPercent');
+        const numberOfPeopleInput = document.getElementById('numberOfPeople');
+
+        const subtotalSpan = document.getElementById('subtotal');
+        const taxSpan = document.getElementById('tax');
+        const tipSpan = document.getElementById('tip');
+        const totalSpan = document.getElementById('total');
+        const perPersonSpan = document.getElementById('perPerson');
+
+        function calculateBill() {
+            const billAmount = parseFloat(billAmountInput.value) || 0;
+            const taxPercent = parseFloat(taxPercentInput.value) || 0;
+            const tipPercent = parseFloat(tipPercentInput.value) || 0;
+            const numberOfPeople = parseInt(numberOfPeopleInput.value) || 1;
+
+            const tax = billAmount * (taxPercent / 100);
+            const subtotalWithTax = billAmount + tax;
+            const tip = subtotalWithTax * (tipPercent / 100);
+            const total = subtotalWithTax + tip;
+            const perPerson = numberOfPeople > 0 ? total / numberOfPeople : 0;
+
+            subtotalSpan.textContent = billAmount.toFixed(2);
+            taxSpan.textContent = tax.toFixed(2);
+            tipSpan.textContent = tip.toFixed(2);
+            totalSpan.textContent = total.toFixed(2);
+            perPersonSpan.textContent = perPerson.toFixed(2);
+        }
+
+        function resetCalculator() {
+            billAmountInput.value = '';
+            taxPercentInput.value = '0';
+            tipPercentInput.value = '0';
+            numberOfPeopleInput.value = '2';
+            calculateBill();
+        }
+
+        function copyToClipboard() {
+            const perPerson = perPersonSpan.textContent;
+            const textToCopy = `Each person pays: $${perPerson}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.style.display = 'block';
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+
+        // Add event listeners for real-time calculation
+        billAmountInput.addEventListener('input', calculateBill);
+        taxPercentInput.addEventListener('input', calculateBill);
+        tipPercentInput.addEventListener('input', calculateBill);
+        numberOfPeopleInput.addEventListener('input', calculateBill);
+
+        // Initial calculation
+        calculateBill();
+    </script>
+</body>
+</html>
